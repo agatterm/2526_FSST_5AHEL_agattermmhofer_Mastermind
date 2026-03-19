@@ -1,21 +1,23 @@
 package org.example.mastermind;
 
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import org.example.mastermind.MastermindModel;
-import org.example.mastermind.MastermindView;
 
+/**
+ * CONTROLLER – steuert den Spielablauf und verbindet Model und View.
+ */
 public class HelloController {
+
     private final MastermindModel model;
-    private final MastermindView view;
+    private final MastermindView  view;
 
     public HelloController(MastermindModel model, MastermindView view) {
         this.model = model;
-        this.view = view;
-
-        initialize();
+        this.view  = view;
     }
 
-    private void initialize() {
+    @FXML
+    public void initialize() {
         view.setInfoText("Erlaubte Farben: " + model.getAllowedColorsAsString());
         view.setRemainingTries(model.getRemainingTries());
         view.setHistory("Noch keine Versuche.");
@@ -34,7 +36,6 @@ public class HelloController {
         }
 
         String result = model.evaluateGuess(guess);
-
         updateHistory();
         view.setRemainingTries(model.getRemainingTries());
         view.clearGuessInput();
@@ -42,13 +43,13 @@ public class HelloController {
 
         if (model.hasWon(result)) {
             view.disableGameInput(true);
-            showAlert("Gewonnen", "Glückwunsch! Sie haben den geheimen Code geknackt!");
+            showAlert("Gewonnen! 🎉", "Glückwunsch! Sie haben den geheimen Code geknackt!");
             return;
         }
 
         if (model.isGameOver()) {
             view.disableGameInput(true);
-            showAlert("Spiel beendet", "Keine Versuche mehr.\nDer geheime Code war: " + model.getSecretCodeAsString());
+            showAlert("Spiel beendet", "Keine Versuche mehr!\nDer geheime Code war: " + model.getSecretCodeAsString());
         }
     }
 
@@ -63,14 +64,12 @@ public class HelloController {
 
     private void updateHistory() {
         StringBuilder sb = new StringBuilder();
-
         for (int i = 0; i < model.getGuessHistory().size(); i++) {
             sb.append(String.format("%2d. %-10s | %s%n",
                     i + 1,
                     model.getGuessHistory().get(i),
                     model.getResultHistory().get(i)));
         }
-
         view.setHistory(sb.toString());
     }
 
