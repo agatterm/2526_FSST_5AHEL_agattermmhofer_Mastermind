@@ -2,8 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -14,6 +16,7 @@
             fx:controller="org.example.mastermind.MastermindView"
             style="-fx-background-color: #f4f4f4;">
 
+  <!-- HEADER -->
   <top>
     <VBox spacing="6" style="-fx-background-color: #2b2b2b; -fx-padding: 15;">
       <Label fx:id="titleLabel"
@@ -25,24 +28,56 @@
     </VBox>
   </top>
 
+  <!-- MITTE: Spielfeld + Seitenleiste -->
   <center>
-    <VBox spacing="8">
-      <padding><Insets top="12" right="15" bottom="8" left="15"/></padding>
-      <Label text="Bisherige Versuche:"
-             style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
-      <ScrollPane fitToWidth="true" prefHeight="300"
-                  style="-fx-background: white; -fx-background-color: white;">
-        <content>
-          <VBox fx:id="historyBox" spacing="6" style="-fx-padding: 8; -fx-background-color: white;"/>
-        </content>
-      </ScrollPane>
-    </VBox>
+    <HBox spacing="0">
+
+      <!-- Spielfeld -->
+      <VBox spacing="8" HBox.hgrow="ALWAYS">
+        <padding><Insets top="12" right="15" bottom="8" left="15"/></padding>
+        <Label text="Bisherige Versuche:"
+               style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
+        <ScrollPane fitToWidth="true" prefHeight="300"
+                    style="-fx-background: white; -fx-background-color: white;">
+          <content>
+            <VBox fx:id="historyBox" spacing="6"
+                  style="-fx-padding: 8; -fx-background-color: white;"/>
+          </content>
+        </ScrollPane>
+      </VBox>
+
+      <!-- Seitenleiste: Farben anpassen -->
+      <VBox spacing="10"
+            style="-fx-background-color: #e0e0e0; -fx-padding: 15; -fx-min-width: 180;">
+        <Label text="🎨 Farben anpassen"
+               style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+        <Separator/>
+
+        <Label text="R – Rot"/>
+        <ColorPicker fx:id="colorPickerR" prefWidth="150"/>
+
+        <Label text="G – Grün"/>
+        <ColorPicker fx:id="colorPickerG" prefWidth="150"/>
+
+        <Label text="B – Blau"/>
+        <ColorPicker fx:id="colorPickerB" prefWidth="150"/>
+
+        <Label text="Y – Gelb"/>
+        <ColorPicker fx:id="colorPickerY" prefWidth="150"/>
+
+        <Label text="O – Orange"/>
+        <ColorPicker fx:id="colorPickerO" prefWidth="150"/>
+
+        <Label text="P – Pink"/>
+        <ColorPicker fx:id="colorPickerP" prefWidth="150"/>
+      </VBox>
+
+    </HBox>
   </center>
 
+  <!-- UNTEN: Eingabe -->
   <bottom>
     <VBox spacing="8" style="-fx-background-color: #ececec; -fx-padding: 12;">
-      <Label text="🍓=R  🍀=G  🔵=B  🌕=Y  🟠=O  🩷=P"
-             style="-fx-font-size: 12px; -fx-text-fill: #555;"/>
       <HBox spacing="10" style="-fx-alignment: center-left;">
         <Label text="Eingabe:" style="-fx-font-weight: bold;"/>
         <TextField fx:id="guessField" prefWidth="200"/>
