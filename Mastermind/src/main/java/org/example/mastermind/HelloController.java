@@ -1,24 +1,11 @@
 package org.example.mastermind;
 
-import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * CONTROLLER – steuert den Spielablauf und verbindet Model und View.
  */
 public class HelloController {
-
-    private static final Map<String, String> EMOJI = Map.of(
-            "R", "🍓",
-            "G", "🍀",
-            "B", "🔵",
-            "Y", "🌕",
-            "O", "🟠",
-            "P", "🩷"
-    );
 
     private final MastermindModel model;
     private final MastermindView  view;
@@ -31,7 +18,7 @@ public class HelloController {
     public void initialize() {
         view.setInfoText("Erlaubte Farben: R, G, B, Y, O, P");
         view.setRemainingTries(model.getRemainingTries());
-        view.setHistory("Noch keine Versuche.");
+        view.clearHistory();
         view.setMessage("Bitte einen gültigen Code eingeben.");
 
         view.getSubmitButton().setOnAction(e -> handleGuess());
@@ -68,25 +55,20 @@ public class HelloController {
         model.resetGame();
         view.disableGameInput(false);
         view.clearGuessInput();
+        view.clearHistory();
         view.setRemainingTries(model.getRemainingTries());
-        view.setHistory("Noch keine Versuche.");
         view.setMessage("Neues Spiel gestartet.");
     }
 
     private void updateHistory() {
-        StringBuilder sb = new StringBuilder();
+        view.clearHistory();
         for (int i = 0; i < model.getGuessHistory().size(); i++) {
-            String guess = model.getGuessHistory().get(i);
-            String emojiGuess = Arrays.stream(guess.split(" "))
-                    .map(c -> EMOJI.getOrDefault(c, c))
-                    .collect(Collectors.joining(" "));
-
-            sb.append(String.format("%2d. %-16s | %s%n",
+            view.addHistoryRow(
                     i + 1,
-                    emojiGuess,
-                    model.getResultHistory().get(i)));
+                    model.getGuessHistory().get(i),
+                    model.getResultHistory().get(i)
+            );
         }
-        view.setHistory(sb.toString());
     }
 
     private void showAlert(String title, String text) {
