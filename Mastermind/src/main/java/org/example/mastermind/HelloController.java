@@ -2,11 +2,23 @@ package org.example.mastermind;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * CONTROLLER – steuert den Spielablauf und verbindet Model und View.
  */
 public class HelloController {
+
+    private static final Map<String, String> EMOJI = Map.of(
+            "R", "🍓",
+            "G", "🍀",
+            "B", "🔵",
+            "Y", "🌕",
+            "O", "🟠",
+            "P", "🩷"
+    );
 
     private final MastermindModel model;
     private final MastermindView  view;
@@ -16,9 +28,8 @@ public class HelloController {
         this.view  = view;
     }
 
-    @FXML
     public void initialize() {
-        view.setInfoText("Erlaubte Farben: " + model.getAllowedColorsAsString());
+        view.setInfoText("Erlaubte Farben: R, G, B, Y, O, P");
         view.setRemainingTries(model.getRemainingTries());
         view.setHistory("Noch keine Versuche.");
         view.setMessage("Bitte einen gültigen Code eingeben.");
@@ -65,9 +76,14 @@ public class HelloController {
     private void updateHistory() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < model.getGuessHistory().size(); i++) {
-            sb.append(String.format("%2d. %-10s | %s%n",
+            String guess = model.getGuessHistory().get(i);
+            String emojiGuess = Arrays.stream(guess.split(" "))
+                    .map(c -> EMOJI.getOrDefault(c, c))
+                    .collect(Collectors.joining(" "));
+
+            sb.append(String.format("%2d. %-16s | %s%n",
                     i + 1,
-                    model.getGuessHistory().get(i),
+                    emojiGuess,
                     model.getResultHistory().get(i)));
         }
         view.setHistory(sb.toString());
