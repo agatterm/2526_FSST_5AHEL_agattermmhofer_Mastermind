@@ -1,6 +1,5 @@
 package org.example.mastermind;
 
-import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 
 /**
@@ -16,11 +15,10 @@ public class HelloController {
         this.view  = view;
     }
 
-    @FXML
     public void initialize() {
-        view.setInfoText("Erlaubte Farben: " + model.getAllowedColorsAsString());
+        view.setInfoText("Erlaubte Farben: R, G, B, Y, O, P");
         view.setRemainingTries(model.getRemainingTries());
-        view.setHistory("Noch keine Versuche.");
+        view.clearHistory();
         view.setMessage("Bitte einen gültigen Code eingeben.");
 
         view.getSubmitButton().setOnAction(e -> handleGuess());
@@ -57,20 +55,20 @@ public class HelloController {
         model.resetGame();
         view.disableGameInput(false);
         view.clearGuessInput();
+        view.clearHistory();
         view.setRemainingTries(model.getRemainingTries());
-        view.setHistory("Noch keine Versuche.");
         view.setMessage("Neues Spiel gestartet.");
     }
 
     private void updateHistory() {
-        StringBuilder sb = new StringBuilder();
+        view.clearHistory();
         for (int i = 0; i < model.getGuessHistory().size(); i++) {
-            sb.append(String.format("%2d. %-10s | %s%n",
+            view.addHistoryRow(
                     i + 1,
                     model.getGuessHistory().get(i),
-                    model.getResultHistory().get(i)));
+                    model.getResultHistory().get(i)
+            );
         }
-        view.setHistory(sb.toString());
     }
 
     private void showAlert(String title, String text) {
