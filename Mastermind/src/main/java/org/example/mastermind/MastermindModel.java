@@ -3,6 +3,7 @@ package org.example.mastermind;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public class MastermindModel {
     private static final char[] ALLOWED_COLORS = {'R', 'G', 'B', 'Y', 'O', 'P'};
@@ -187,5 +188,67 @@ public class MastermindModel {
         }
 
         return sb.toString();
+    }
+
+    // -------------------------------------------------------------------------
+    // Konsolenmodus
+    // -------------------------------------------------------------------------
+
+    public void playInConsole() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("=== MASTERMIND ===");
+        System.out.println("Erlaubte Farben: " + getAllowedColorsAsString());
+        System.out.println("Errate den " + CODE_LENGTH + "-stelligen Code. Du hast " + MAX_TRIES + " Versuche.");
+        System.out.println("● = richtige Farbe, richtige Position");
+        System.out.println("○ = richtige Farbe, falsche Position");
+        System.out.println("------------------");
+
+        while (true) {
+            System.out.printf("%nVersuch %d/%d – Dein Tipp: ", (MAX_TRIES - remainingTries + 1), MAX_TRIES);
+            String input = scanner.nextLine().trim();
+
+            if (!isValidGuess(input)) {
+                System.out.println("Ungültige Eingabe! Bitte genau " + CODE_LENGTH
+                        + " Farben aus [" + getAllowedColorsAsString() + "] eingeben.");
+                continue;
+            }
+
+            String result = evaluateGuess(input);
+            System.out.println("Ergebnis: " + result);
+
+            if (hasWon(result)) {
+                System.out.println("\n🎉 Gewonnen! Du hast den Code in "
+                        + (MAX_TRIES - remainingTries) + " Versuch(en) geknackt.");
+                break;
+            }
+
+            if (isGameOver()) {
+                System.out.println("\n❌ Verloren! Der geheime Code war: " + getSecretCodeAsString());
+                break;
+            }
+
+            System.out.println("Noch " + remainingTries + " Versuche übrig.");
+            printHistory();
+        }
+
+        System.out.print("%nNochmal spielen? (j/n): ");
+        if (scanner.nextLine().trim().equalsIgnoreCase("j")) {
+            resetGame();
+            playInConsole();
+        } else {
+            System.out.println("Tschüss!");
+        }
+    }
+
+    private void printHistory() {
+        System.out.println("-- Verlauf --");
+        for (int i = 0; i < guessHistory.size(); i++) {
+            System.out.printf("  %2d. %-10s %s%n", i + 1, guessHistory.get(i), resultHistory.get(i));
+        }
+    }
+
+    public static void main(String[] args) {
+        new MastermindModel().playInConsole();
     }
 }
