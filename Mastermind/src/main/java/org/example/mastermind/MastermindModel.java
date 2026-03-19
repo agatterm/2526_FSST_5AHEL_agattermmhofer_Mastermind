@@ -228,7 +228,7 @@ public class MastermindModel {
                 break;
             }
 
-            System.out.println("Noch " + remainingTries + " Versuch(e) übrig.");
+            System.out.println("Noch " + remainingTries + " Versuche übrig.");
             printHistory();
         }
 
